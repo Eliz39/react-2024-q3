@@ -1,0 +1,29 @@
+.flex-wrapper {
+  display: flex;
+  gap: 5px;
+}
+
+input {
+  background: 0;
+  border: 0;
+  outline: none;
+  width: 100%;
+  max-width: 400px;
+  font-size: 1.5em;
+  transition: padding 0.3s 0.2s ease;
+  border-bottom: 2px solid #bdc3c7;
+}
+
+button {
+  padding: 10px;
+
+  color: rgb(84 84 110 / 90%);
+  font-weight: 600;
+
+  outline: none;
+  background: white;
+  border-radius: 6px;
+  border: 2px solid #bdc3c7;
+
+  cursor: pointer;
+}

@@ -1,5 +1,12 @@
-function App() {
-  return <div>Hello world</div>;
-}
+import { Component } from "react";
+import { SearchComponent } from "./SearchComponent";
 
-export default App;
+export class App extends Component {
+  render() {
+    return (
+      <>
+        <SearchComponent />
+      </>
+    );
+  }
+}
