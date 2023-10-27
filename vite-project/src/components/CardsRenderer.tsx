@@ -25,7 +25,6 @@ export class CardsRenderer extends Component<CardsRendererProps> {
 
 const Div_CardsWrapper = styled.div`
   margin: 50px;
-  width: 100%;
 
   display: flex;
   flex-wrap: wrap;
