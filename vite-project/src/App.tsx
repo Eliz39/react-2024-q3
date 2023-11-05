@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { SearchComponent } from "./components/SearchComponent";
 import { CardType } from "./types/CardType";
@@ -7,15 +7,15 @@ import { BASE_URL } from "./BASE_URL";
 import "./styles/App.css";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 
-export class App extends Component {
-  state = {
-    loading: true,
-    dataArr: [] as CardType[],
-    searchTerm: localStorage.getItem("searchTerm") ?? "",
-  };
+export function App() {
+  const [loading, setLoading] = useState(true);
+  const [dataArr, setDataArr] = useState([] as CardType[]);
+  const [searchTerm, setSearchTerm] = useState(
+    localStorage.getItem("searchTerm") ?? ""
+  );
 
-  componentDidMount(): void {
-    if (!this.state.searchTerm) {
+  useEffect(() => {
+    if (!searchTerm) {
       fetch(BASE_URL)
         .then((response) => {
           if (response.ok) {
@@ -23,18 +23,16 @@ export class App extends Component {
           }
         })
         .then((data) => {
-          this.setState({
-            dataArr: data.results,
-          });
+          setDataArr(data.results);
         })
-        .finally(() => this.setState({ loading: false }));
+        .finally(() => setLoading(false));
     } else {
-      this.handleClick();
+      handleClick();
     }
-  }
+  }, []);
 
-  handleClick = () => {
-    const queryParam = this.state.searchTerm.trim().toLowerCase();
+  const handleClick = () => {
+    const queryParam = searchTerm.trim().toLowerCase();
     fetch(`${BASE_URL}?name=${queryParam}`)
       .then((response) => {
         if (response.ok) {
@@ -42,45 +40,41 @@ export class App extends Component {
         }
       })
       .then((data) => {
-        this.setState({
-          dataArr: data.results,
-        });
+        setDataArr(data.results);
       })
-      .finally(() => this.setState({ loading: false }));
+      .finally(() => setLoading(false));
   };
 
-  handleInputValueChange = (value: string) => {
-    this.setState({ searchTerm: value });
+  const handleInputValueChange = (value: string) => {
+    setSearchTerm(value);
     localStorage.setItem("searchTerm", value);
   };
 
-  render() {
-    return (
-      <Div_Wrapper>
-        <ErrorBoundary
-          fallback={
-            <Fallback>
-              Ooops...Looks like we are having some issues to display this page.
-              <br /> If you are developer check the console.
-            </Fallback>
-          }
-        >
-          {this.state.loading === false ? (
-            <>
-              <SearchComponent
-                value={this.state.searchTerm}
-                onChange={(value) => this.handleInputValueChange(value)}
-                handleClick={this.handleClick}
-              />
-              <CardsRenderer cardsArr={this.state.dataArr} />
-            </>
-          ) : (
-            <p>Loading...</p>
-          )}
-        </ErrorBoundary>
-      </Div_Wrapper>
-    );
-  }
+  return (
+    <Div_Wrapper>
+      <ErrorBoundary
+        fallback={
+          <Fallback>
+            Ooops...Looks like we are having some issues to display this page.
+            <br /> If you are developer check the console.
+          </Fallback>
+        }
+      >
+        {loading === false ? (
+          <>
+            <SearchComponent
+              value={searchTerm}
+              onChange={(value) => handleInputValueChange(value)}
+              handleClick={handleClick}
+            />
+            <CardsRenderer cardsArr={dataArr} />
+          </>
+        ) : (
+          <p>Loading...</p>
+        )}
+      </ErrorBoundary>
+    </Div_Wrapper>
+  );
 }
 
 const Div_Wrapper = styled.div`

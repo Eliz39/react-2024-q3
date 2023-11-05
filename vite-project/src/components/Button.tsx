@@ -1,10 +1,8 @@
-import { Component, ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes } from "react";
 import styled from "styled-components";
 
-export class Button extends Component<ButtonHTMLAttributes<HTMLButtonElement>> {
-  render() {
-    return <Button_Styled {...this.props}>{this.props.children}</Button_Styled>;
-  }
+export function Button(props: ButtonHTMLAttributes<HTMLButtonElement>) {
+  return <Button_Styled {...props}>{props.children}</Button_Styled>;
 }
 
 const Button_Styled = styled.button`

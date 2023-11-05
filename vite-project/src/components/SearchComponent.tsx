@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { Button } from "./Button";
 
@@ -8,32 +8,30 @@ type SearchComponentProps = {
   handleClick: () => void;
 };
 
-export class SearchComponent extends Component<SearchComponentProps> {
-  state = {
-    isError: false,
+export function SearchComponent(props: SearchComponentProps) {
+  const [isError, setIsError] = useState(false);
+
+  const showFallback = () => {
+    setIsError(true);
   };
 
-  showFallback = () => {
-    this.setState({ isError: true });
-  };
-  render() {
-    if (this.state.isError) {
-      throw new Error("This is a test error");
-    }
-    return (
-      <Div className="flex-wrapper">
-        <Input
-          type="text"
-          value={this.props.value}
-          onChange={(e) => this.props.onChange(e.target.value)}
-        />
-        <Button onClick={this.props.handleClick}>Search by name</Button>
-        <Button onClick={this.showFallback} style={{ background: "#f59999" }}>
-          Create error
-        </Button>
-      </Div>
-    );
+  if (isError) {
+    throw new Error("This is a test error");
   }
+
+  return (
+    <Div className="flex-wrapper">
+      <Input
+        type="text"
+        value={props.value}
+        onChange={(e) => props.onChange(e.target.value)}
+      />
+      <Button onClick={props.handleClick}>Search by name</Button>
+      <Button onClick={showFallback} style={{ background: "#f59999" }}>
+        Create error
+      </Button>
+    </Div>
+  );
 }
 
 const Div = styled.div`
