@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
+import { AppContext } from "../../context/AppContext";
 import { SearchComponent } from "../../components/SearchComponent";
 import { CardsRenderer } from "../../components/CardsRenderer";
 
 import { BASE_URL } from "../../BASE_URL";
 
 import { CardType } from "../../types/CardType";
+import { getAllCharacters, searchCharacter } from "../../utils/api";
 
 export function MainPage() {
   const urlParams = new URLSearchParams(useLocation().search);
@@ -21,53 +23,37 @@ export function MainPage() {
   const [currentPage, setCurrentPage] = useState(pageParam ? pageParam : 1);
 
   useEffect(() => {
-    if (!searchTerm) {
-      fetch(`${BASE_URL}/?page=${currentPage}`)
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-        })
-        .then((data) => {
+    const getDefalutCharacters = async () => {
+      if (!searchTerm) {
+        const data = await getAllCharacters(currentPage);
+        setLoading(false);
+        if (data) {
           setDataArr(data.results);
           setPages(data.info.pages);
-        })
-        .finally(() => setLoading(false));
-    } else {
-      handleSearchButtonClick();
-    }
+        }
+      } else {
+        handleSearchButtonClick();
+      }
+    };
+    getDefalutCharacters();
   }, [currentPage]);
 
-  const handleSearchButtonClick = () => {
+  const handleSearchButtonClick = async () => {
     const queryParam = searchTerm.trim().toLowerCase();
-    fetch(`${BASE_URL}?name=${queryParam}`)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        setDataArr(data.results);
-      })
-      .finally(() => setLoading(false));
-  };
-
-  const handleInputValueChange = (value: string) => {
-    setSearchTerm(value);
-    localStorage.setItem("searchTerm", value);
+    const data = await searchCharacter(queryParam);
+    setLoading(false);
+    if (data) {
+      setDataArr(data.results);
+      setPages(data.info.pages);
+    }
   };
 
   return (
-    <>
+    <AppContext.Provider value={{ searchTerm, setSearchTerm, dataArr }}>
       {loading === false ? (
         <>
-          <SearchComponent
-            value={searchTerm}
-            onChange={(value) => handleInputValueChange(value)}
-            handleClick={handleSearchButtonClick}
-          />
+          <SearchComponent handleClick={handleSearchButtonClick} />
           <CardsRenderer
-            cardsArr={dataArr}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
             pages={pages}
@@ -77,6 +63,6 @@ export function MainPage() {
         <p>Loading...</p>
       )}
       <Outlet />
-    </>
+    </AppContext.Provider>
   );
 }

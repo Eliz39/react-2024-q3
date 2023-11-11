@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AppContext } from "../context/AppContext";
 import styled from "styled-components";
 import { Button } from "./Button";
 
 type SearchComponentProps = {
-  value: string;
-  onChange: (value: string) => void;
+  // value: string;
+  // onChange: (value: string) => void;
   handleClick: () => void;
 };
 
 export function SearchComponent(props: SearchComponentProps) {
   const [isError, setIsError] = useState(false);
+  const { searchTerm, setSearchTerm } = useContext(AppContext);
 
   const showFallback = () => {
     setIsError(true);
@@ -19,12 +21,17 @@ export function SearchComponent(props: SearchComponentProps) {
     throw new Error("This is a test error");
   }
 
+  const handleChange = (value: string) => {
+    setSearchTerm(value);
+    localStorage.setItem("searchTerm", value);
+  };
+
   return (
     <Div className="flex-wrapper">
       <Input
         type="text"
-        value={props.value}
-        onChange={(e) => props.onChange(e.target.value)}
+        value={searchTerm}
+        onChange={(e) => handleChange(e.target.value)}
       />
       <Button onClick={props.handleClick}>Search by name</Button>
       <Button onClick={showFallback} style={{ background: "#f59999" }}>

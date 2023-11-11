@@ -10,3 +10,25 @@ export const getCharacter = async (id: string) => {
     return;
   }
 };
+
+export const getAllCharacters = async (currentPage: number) => {
+  try {
+    const response = await fetch(`${BASE_URL}/?page=${currentPage}`);
+
+    const { results, info } = await response.json();
+    return { results, info };
+  } catch {
+    return;
+  }
+};
+
+export const searchCharacter = async (queryParam: string) => {
+  try {
+    const response = await fetch(`${BASE_URL}?name=${queryParam}`);
+
+    const { results, info } = await response.json();
+    return { results, info };
+  } catch {
+    return;
+  }
+};

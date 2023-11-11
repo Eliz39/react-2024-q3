@@ -1,21 +1,22 @@
+import { useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { CardType } from "../types/CardType";
+import { AppContext } from "../context/AppContext";
 import { Card } from "./Card";
 import { Pagination } from "../pages/main/Pagination";
 
 type CardsRendererProps = {
-  cardsArr: CardType[];
   currentPage: number;
   setCurrentPage: (page: number) => void;
   pages: number;
 };
 
 export function CardsRenderer(props: CardsRendererProps) {
+  const { dataArr } = useContext(AppContext);
   return (
     <div>
       <Div_CardsWrapper>
-        {props.cardsArr.map((card) => {
+        {dataArr.map((card) => {
           return (
             <Div_CardWrapper key={card.id}>
               <Link to={`modal?page=${props.currentPage}&details=${card.id}`}>
