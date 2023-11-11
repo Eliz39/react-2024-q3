@@ -11,12 +11,6 @@ export function Card(props: CardProps) {
     <Div_Card>
       <Img src={props.card.image} alt={`${props.card.name} image`} />
       <P_Name>{props.card.name}</P_Name>
-      <Div_Info>
-        <p>Status: {props.card.status}</p>
-        <p>Species: {props.card.species}</p>
-        <p>Gender: {props.card.gender}</p>
-        <p>Location: {props.card.location.name}</p>
-      </Div_Info>
     </Div_Card>
   );
 }
@@ -28,11 +22,21 @@ const Div_Card = styled.div`
   flex-direction: column;
   gap: 15px;
 
-  color: white;
+  color: ${style.white};
 
-  background: #ffffff14;
+  background: ${style.transparentGray};
   border: 1px solid ${style.gray};
   border-radius: 10px;
+
+  transition: all ease-in-out 0.2s;
+
+  &:hover {
+    img {
+      transform: scale(1.05);
+      transition: all ease-in-out 0.4s;
+    }
+    color: ${style.orange};
+  }
 `;
 const Img = styled.img`
   margin: 0 auto;
@@ -48,5 +52,3 @@ const P_Name = styled.p`
   line-height: 24px;
   font-weight: 600;
 `;
-
-const Div_Info = styled.div``;
