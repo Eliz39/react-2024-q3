@@ -20,7 +20,7 @@ export function CardsRenderer(props: CardsRendererProps) {
           return (
             <Div_CardWrapper key={card.id}>
               <Link to={`modal?page=${props.currentPage}&details=${card.id}`}>
-                <Card card={card} />
+                <Card name={card.name} image={card.image} />
               </Link>
             </Div_CardWrapper>
           );

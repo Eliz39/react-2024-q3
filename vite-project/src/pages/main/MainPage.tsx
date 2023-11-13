@@ -5,8 +5,6 @@ import { AppContext } from "../../context/AppContext";
 import { SearchComponent } from "../../components/SearchComponent";
 import { CardsRenderer } from "../../components/CardsRenderer";
 
-import { BASE_URL } from "../../BASE_URL";
-
 import { CardType } from "../../types/CardType";
 import { getAllCharacters, searchCharacter } from "../../utils/api";
 

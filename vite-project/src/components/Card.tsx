@@ -1,16 +1,16 @@
 import styled from "styled-components";
 import { style } from "../styles/styleVariables";
-import { CardType } from "../types/CardType";
 
 type CardProps = {
-  card: CardType;
+  name: string;
+  image: string;
 };
 
 export function Card(props: CardProps) {
   return (
     <Div_Card>
-      <Img src={props.card.image} alt={`${props.card.name} image`} />
-      <P_Name>{props.card.name}</P_Name>
+      <Img src={props.image} alt={`${props.name} image`} />
+      <P_Name>{props.name}</P_Name>
     </Div_Card>
   );
 }

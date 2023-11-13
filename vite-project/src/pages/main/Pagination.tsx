@@ -13,7 +13,8 @@ export function Pagination({
   setCurrentPage,
 }: PaginationProps) {
   const handlePrevClick = () => setCurrentPage(Math.max(currentPage - 1, 1));
-  const handleNextClick = () => setCurrentPage(Math.min(currentPage + 1));
+  const handleNextClick = () =>
+    setCurrentPage(Math.min(currentPage + 1, totalPages));
 
   return (
     <Div_Pagination>
