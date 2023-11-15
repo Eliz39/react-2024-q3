@@ -4,11 +4,12 @@ import { style } from "../styles/styleVariables";
 type CardProps = {
   name: string;
   image: string;
+  testId?: string;
 };
 
 export function Card(props: CardProps) {
   return (
-    <Div_Card>
+    <Div_Card data-testid={props.testId}>
       <Img src={props.image} alt={`${props.name} image`} />
       <P_Name>{props.name}</P_Name>
     </Div_Card>
