@@ -1,20 +1,16 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { setCurrentPage } from "../../redux/slices/cardsRendererSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
-type PaginationProps = {
-  currentPage: number;
-  totalPages: number;
-  setCurrentPage: (page: number) => void;
-};
+export function Pagination() {
+  const dispatch = useAppDispatch();
 
-export function Pagination({
-  currentPage,
-  totalPages,
-  setCurrentPage,
-}: PaginationProps) {
+  const { pages, currentPage } = useAppSelector((state) => state.cardsRenderer);
+
   const handlePrevClick = () => setCurrentPage(Math.max(currentPage - 1, 1));
   const handleNextClick = () =>
-    setCurrentPage(Math.min(currentPage + 1, totalPages));
+    dispatch(setCurrentPage(Math.min(currentPage + 1, pages)));
 
   return (
     <Div_Pagination>
@@ -30,7 +26,7 @@ export function Pagination({
       <Link to={`/?page=${currentPage + 1}`}>
         <Button_Pagination
           onClick={handleNextClick}
-          disabled={currentPage >= totalPages}
+          disabled={currentPage >= pages}
         >
           &gt;
         </Button_Pagination>

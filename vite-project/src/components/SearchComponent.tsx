@@ -1,17 +1,22 @@
-import { useState, useContext } from "react";
-import { AppContext } from "../context/AppContext";
+import { useState } from "react";
 import styled from "styled-components";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+
+import { setSearchTerm } from "../redux/slices/searchComponentSlice";
+import { searchCharacter } from "../utils/api";
+import {
+  receivedCards,
+  setPages,
+  setIsLoading,
+} from "../redux/slices/cardsRendererSlice";
+
 import { Button } from "./Button";
 
-type SearchComponentProps = {
-  // value: string;
-  // onChange: (value: string) => void;
-  handleClick: () => void;
-};
+export function SearchComponent() {
+  const dispatch = useAppDispatch();
 
-export function SearchComponent(props: SearchComponentProps) {
   const [isError, setIsError] = useState(false);
-  const { searchTerm, setSearchTerm } = useContext(AppContext);
+  const { searchTerm } = useAppSelector((state) => state.searchComponent);
 
   const showFallback = () => {
     setIsError(true);
@@ -22,8 +27,19 @@ export function SearchComponent(props: SearchComponentProps) {
   }
 
   const handleChange = (value: string) => {
-    setSearchTerm(value);
+    dispatch(setSearchTerm(value));
     localStorage.setItem("searchTerm", value);
+  };
+
+  const handleClick = async () => {
+    const queryParam = searchTerm.trim().toLowerCase();
+    const data = await searchCharacter(queryParam);
+
+    if (data) {
+      dispatch(receivedCards(data.results));
+      dispatch(setPages(data.info.pages));
+    }
+    dispatch(setIsLoading(false));
   };
 
   return (
@@ -33,7 +49,7 @@ export function SearchComponent(props: SearchComponentProps) {
         value={searchTerm}
         onChange={(e) => handleChange(e.target.value)}
       />
-      <Button onClick={props.handleClick}>Search by name</Button>
+      <Button onClick={handleClick}>Search by name</Button>
       <Button onClick={showFallback} style={{ background: "#f59999" }}>
         Create error
       </Button>

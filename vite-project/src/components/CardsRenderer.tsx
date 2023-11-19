@@ -1,25 +1,32 @@
-import { useContext } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { AppContext } from "../context/AppContext";
+import { Link, useLocation } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../redux/hooks";
+import { setCurrentPage } from "../redux/slices/cardsRendererSlice";
 import { Card } from "./Card";
 import { Pagination } from "../pages/main/Pagination";
 
-type CardsRendererProps = {
-  currentPage: number;
-  setCurrentPage: (page: number) => void;
-  pages: number;
-};
+export function CardsRenderer() {
+  const dispatch = useAppDispatch();
 
-export function CardsRenderer(props: CardsRendererProps) {
-  const { dataArr } = useContext(AppContext);
+  const { dataArr, currentPage } = useAppSelector(
+    (state) => state.cardsRenderer
+  );
+
+  const urlParams = new URLSearchParams(useLocation().search);
+  const pageParam = Number(urlParams.get("page")) || 1;
+
+  useEffect(() => {
+    dispatch(setCurrentPage(pageParam));
+  }, []);
+
   return (
     <div>
       <Div_CardsWrapper>
         {dataArr.map((card) => {
           return (
             <Div_CardWrapper key={card.id}>
-              <Link to={`modal?page=${props.currentPage}&details=${card.id}`}>
+              <Link to={`modal?page=${currentPage}&details=${card.id}`}>
                 <Card name={card.name} image={card.image} testId="card" />
               </Link>
             </Div_CardWrapper>
@@ -27,11 +34,7 @@ export function CardsRenderer(props: CardsRendererProps) {
         })}
       </Div_CardsWrapper>
 
-      <Pagination
-        currentPage={props.currentPage}
-        setCurrentPage={props.setCurrentPage}
-        totalPages={props.pages}
-      />
+      <Pagination />
     </div>
   );
 }

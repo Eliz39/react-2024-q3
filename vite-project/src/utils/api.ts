@@ -5,7 +5,7 @@ export const getCharacter = async (id: string) => {
     const response = await fetch(`${BASE_URL}/${id}`);
     const { image, name, status, species, gender, location } =
       await response.json();
-    return { image, name, status, species, gender, location };
+    return { image, name, status, species, gender, location, id };
   } catch {
     return;
   }
